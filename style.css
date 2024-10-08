@@ -16,7 +16,7 @@
         flex: 1 1 200px; /* Fleksibel, dengan lebar minimum 200px */
       }  
     h1 {
-        font-size: 10vw;
+        font-size: 6vw;
       }
     #welcome-section{
     background-color:hsl(160, 100%, 90%);
