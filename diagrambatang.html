@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penggunaan CPU oleh Berbagai Aplikasi</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center; /* Menyelaraskan teks di tengah */
+        }
+        #bar-chart {
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center; /* Menyelaraskan judul di tengah */
+        }
+    </style>
+</head>
+<body>
+    <h1>Diagram Batang</h1>
+    <div id="bar-chart"></div>
+    <script>
+        var data = [{
+            x: ['Instagram', 'Youtube', 'Facebook', 'Whatsapp'],
+            y: [50, 75, 60, 90],
+            type: 'bar',
+            marker: {
+                color: ['#FF69B4', '#DC143C', '#1E90FF', '#32CD32'],
+                line: {
+                    color: 'black',
+                    width: 1.2
+                }
+            },
+            text: ['50%', '75%', '60%', '90%'],
+            hoverinfo: 'text'
+        }];
+
+        var mean = (50 + 75 + 60 + 90) / 4;
+        var median = 67.5; // Median dari 50, 60, 75, 90
+        var stdDev = Math.sqrt(((50 - mean) ** 2 + (75 - mean) ** 2 + (60 - mean) ** 2 + (90 - mean) ** 2) / 4);
+
+        var layout = {
+            title: {
+                text: 'Penggunaan CPU oleh Berbagai Aplikasi',
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                pad: 20
+            },
+            xaxis: {
+                title: {
+                    text: 'Aplikasi',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                }
+            },
+            yaxis: {
+                title: {
+                    text: 'Penggunaan CPU (%)',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                },
+                range: [0, 100],
+                gridcolor: '#e6e6e6'
+            },
+            annotations: [
+                {
+                    x: 'Instagram',
+                    y: 50,
+                    text: '50%',
+                    showarrow: false,
+                    font: {
+                        color: 'white',
+                        weight: 'bold'
+                    },
+                    yshift: -20
+                },
+                {
+                    x: 'Youtube',
+                    y: 75,
+                    text: '75%',
+                    showarrow: false,
+                    font: {
+                        color: 'white',
+                        weight: 'bold'
+                    },
+                    yshift: -20
+                },
+                {
+                    x: 'Facebook',
+                    y: 60,
+                    text: '60%',
+                    showarrow: false,
+                    font: {
+                        color: 'white',
+                        weight: 'bold'
+                    },
+                    yshift: -20
+                },
+                {
+                    x: 'Whatsapp',
+                    y: 90,
+                    text: '90%',
+                    showarrow: false,
+                    font: {
+                        color: 'white',
+                        weight: 'bold'
+                    },
+                    yshift: -20
+                }
+            ],
+            shapes: [
+                {
+                    type: 'line',
+                    x0: -0.5,
+                    x1: 3.5,
+                    y0: mean,
+                    y1: mean,
+                    line: {
+                        color: 'red',
+                        width: 2,
+                        dash: 'dash'
+                    },
+                    name: 'Mean'
+                },
+                {
+                    type: 'line',
+                    x0: -0.5,
+                    x1: 3.5,
+                    y0: median,
+                    y1: median,
+                    line: {
+                        color: 'blue',
+                        width: 2,
+                        dash: 'dot'
+                    },
+                    name: 'Median'
+                }
+            ],
+            margin: {
+                l: 60,
+                r: 60,
+                t: 60,
+                b: 60
+            }
+        };
+
+        Plotly.newPlot('bar-chart', data, layout);
+
+        // Menampilkan informasi statistik
+        var statsDiv = document.createElement('div');
+        statsDiv.innerHTML = `
+            <h2>Statistik</h2>
+            <p>Rata-rata: ${mean.toFixed(2)}%</p>
+            <p>Median: ${median}%</p>
+            <p>Standar Deviasi: ${stdDev.toFixed(2)}%</p>
+        `;
+        document.body.appendChild(statsDiv);
+    </script>
+</body>
+</html>

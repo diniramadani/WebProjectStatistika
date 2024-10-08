@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penggunaan Bandwidth Server</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px; /* Ukuran font diperbesar */
+            font-weight: bold; /* Teks dibuat tebal */
+        }
+    </style>
+</head>
+<body>
+    <h1>Diagram Garis</h1>
+    <div id="line-chart" style="width:800px;height:600px;"></div>
+    <script>
+        var xData = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+        var yData = [50, 65, 70, 80, 90, 85, 95, 100, 110, 120];
+
+        // Calculate mean, median, and standard deviation
+        var mean = yData.reduce((a, b) => a + b, 0) / yData.length;
+        var median = yData.slice().sort((a, b) => a - b)[Math.floor(yData.length / 2)];
+        var stdDev = Math.sqrt(yData.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / yData.length);
+
+        var data = [{
+            x: xData,
+            y: yData,
+            type: 'scatter',
+            mode: 'lines+markers',
+            marker: {
+                color: 'orange',
+                size: 10,
+                line: {
+                    color: '#1f77b4',
+                    width: 2
+                }
+            },
+            line: {
+                color: '#1f77b4',
+                width: 3,
+                dash: 'solid'
+            },
+            name: 'Bandwidth'
+        }, {
+            x: xData,
+            y: Array(xData.length).fill(mean),
+            type: 'scatter',
+            mode: 'lines',
+            line: {
+                color: 'red',
+                width: 2,
+                dash: 'dash'
+            },
+            name: 'Mean'
+        }, {
+            x: xData,
+            y: Array(xData.length).fill(median),
+            type: 'scatter',
+            mode: 'lines',
+            line: {
+                color: 'green',
+                width: 2,
+                dash: 'dot'
+            },
+            name: 'Median'
+        }];
+
+        var layout = {
+            title: {
+                text: 'Penggunaan Bandwidth Server',
+                font: {
+                    size: 20,
+                    weight: 'bold'
+                },
+                pad: {
+                    t: 30
+                }
+            },
+            xaxis: {
+                title: {
+                    text: 'Jam',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                tickangle: 45,
+                tickfont: {
+                    size: 14
+                },
+                gridcolor: 'rgba(200, 200, 200, 0.5)'
+            },
+            yaxis: {
+                title: {
+                    text: 'Penggunaan Bandwidth (GB)',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                gridcolor: 'rgba(200, 200, 200, 0.5)'
+            },
+            annotations: [
+                {
+                    x: '19:00',
+                    y: 120,
+                    xref: 'x',
+                    yref: 'y',
+                    text: 'Max: 120 GB',
+                    showarrow: true,
+                    arrowhead: 7,
+                    ax: 0,
+                    ay: -40,
+                    font: {
+                        size: 14,
+                        color: 'red',
+                        weight: 'bold'
+                    }
+                },
+                {
+                    x: '10:00',
+                    y: 50,
+                    xref: 'x',
+                    yref: 'y',
+                    text: 'Min: 50 GB',
+                    showarrow: true,
+                    arrowhead: 7,
+                    ax: 0,
+                    ay: 40,
+                    font: {
+                        size: 14,
+                        color: 'green',
+                        weight: 'bold'
+                    }
+                },
+                {
+                    x: '14:00',
+                    y: mean,
+                    xref: 'x',
+                    yref: 'y',
+                    text: `Mean: ${mean.toFixed(2)} GB`,
+                    showarrow: false,
+                    font: {
+                        size: 14,
+                        color: 'red',
+                        weight: 'bold'
+                    }
+                },
+                {
+                    x: '14:00',
+                    y: median,
+                    xref: 'x',
+                    yref: 'y',
+                    text: `Median: ${median.toFixed(2)} GB`,
+                    showarrow: false,
+                    font: {
+                        size: 14,
+                        color: 'green',
+                        weight: 'bold'
+                    }
+                },
+                {
+                    x: '14:00',
+                    y: mean + stdDev,
+                    xref: 'x',
+                    yref: 'y',
+                    text: `Std Dev: ${stdDev.toFixed(2)} GB`,
+                    showarrow: false,
+                    font: {
+                        size: 14,
+                        color: 'blue',
+                        weight: 'bold'
+                    }
+                }
+            ],
+            shapes: [
+                {
+                    type: 'line',
+                    x0: 0,
+                    y0: 50,
+                    x1: 9,
+                    y1: 120,
+                    line: {
+                        color: 'gray',
+                        width: 2,
+                        dash: 'dash'
+                    }
+                }
+            ],
+            plot_bgcolor: '#ffffff',
+            paper_bgcolor: '#ffffff',
+            showlegend: true
+        };
+
+        Plotly.newPlot('line-chart', data, layout);
+    </script>
+</body>
+</html>

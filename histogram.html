@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribusi Waktu Respons Server</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .chart-container {
+            width: 50%;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <div class="chart-title">Distribusi Waktu Respons Server</div>
+        <canvas id="responseTimeChart"></canvas>
+    </div>
+    <script>
+        const ctx = document.getElementById('responseTimeChart').getContext('2d');
+        const responseTimes = [120, 130, 125, 145, 150, 165, 180, 190, 200, 210, 220, 230];
+        const meanResponse = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['120-140', '140-160', '160-180', '180-200', '200-220', '220-240'],
+                datasets: [{
+                    label: 'Frekuensi',
+                    data: [3, 2, 2, 2, 2, 1],
+                    backgroundColor: 'rgba(30, 144, 255, 0.7)',
+                    borderColor: 'rgba(30, 144, 255, 1)',
+                    borderWidth: 1,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Waktu Respons (ms)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#333'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Frekuensi',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#333',
+                            beginAtZero: true
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Distribusi Waktu Respons Server',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 20,
+                            bottom: 20
+                        },
+                        color: '#333'
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: meanResponse,
+                                yMax: meanResponse,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                label: {
+                                    content: `Mean: ${meanResponse.toFixed(2)} ms`,
+                                    enabled: true,
+                                    position: 'end',
+                                    backgroundColor: 'red',
+                                    color: 'white',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutBounce'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

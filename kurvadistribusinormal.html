@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distribusi Waktu Respons Server</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        #chart {
+            width: 80%;
+            max-width: 800px;
+        }
+        h2 {
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em; /* Ukuran font diperbesar */
+        }
+    </style>
+</head>
+<body>
+    <h2>Kurva Distribusi</h2>
+    <div id="chart"></div>
+    <script>
+        // Generate 20 normally distributed response times
+        function generateNormalData(mean, stdDev, size) {
+            let data = [];
+            for (let i = 0; i < size; i++) {
+                let u = Math.random();
+                let v = Math.random();
+                let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+                data.push(z * stdDev + mean);
+            }
+            return data;
+        }
+
+        let responseTimes = generateNormalData(170, 30, 20);
+
+        // Create histogram trace
+        let trace1 = {
+            x: responseTimes,
+            type: 'histogram',
+            histnorm: 'probability density',
+            marker: {
+                color: 'blue',
+                line: {
+                    color: 'black',
+                    width: 1
+                }
+            },
+            opacity: 0.6
+        };
+
+        // Create KDE trace
+        let trace2 = {
+            x: responseTimes,
+            type: 'scatter',
+            mode: 'lines',
+            line: {
+                color: 'red',
+                width: 2
+            },
+            y: responseTimes.map((_, i) => {
+                let kde = 0;
+                for (let j = 0; j < responseTimes.length; j++) {
+                    kde += Math.exp(-0.5 * Math.pow((responseTimes[i] - responseTimes[j]) / 30, 2)) / (30 * Math.sqrt(2 * Math.PI));
+                }
+                return kde / responseTimes.length;
+            })
+        };
+
+        let data = [trace1, trace2];
+
+        let layout = {
+            title: 'Distribusi Waktu Respons Server dengan Kurva Normal',
+            xaxis: { title: 'Waktu Respons (ms)' },
+            yaxis: { title: 'Kepadatan Frekuensi' }
+        };
+
+        Plotly.newPlot('chart', data, layout);
+    </script>
+</body>
+</html>
